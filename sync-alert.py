@@ -4,9 +4,14 @@ import os
 from datetime import datetime
 
 logpath = os.environ['LOGPATH']
+arn = os.environ['ARN']
+lookback = os.environ['LOOKBACK']
 
-logname = "2017-04-12.log"
-lookback = datetime(2017,04,12,17,47,00)
+#logname = "2017-04-12.log"
+#lookback = datetime(2017,04,12,17,47,00)
+
+logname = datetime.now().strftime("%Y-%m-%d") + ".log"
+t_now = datetime.now()
 
 pdate = re.compile('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})')
 perror = re.compile('ERROR')
@@ -21,8 +26,8 @@ with open(logpath + logname, 'r') as f:
   m = pdate.match(line)
   if m is not None:
    lt = datetime.strptime(m.group(), "%Y-%m-%d %H:%M:%S")
-   tdelta = lookback - lt
-   if tdelta.seconds < 300:
+   tdelta = t_now - lt
+   if tdelta.seconds < lookback:
     if perror.search(line): #me is not None:
      #this line contained "ERROR"
      msgbody = msgbody + line
@@ -40,6 +45,14 @@ with open(logpath + logname, 'r') as f:
 
 if msgbody != '':
  #something wrong
- print msgbody
+ msgbody = "Issues were detected with the Adobe Sync Tool. A summary is included below: \n\n" + msgbody
+ import boto3
+ client = boto3.client('sns')
+ response = client.publish(
+  TopicArn=arn,
+  Subject="Adobe Sync Tool Alert",
+  Message=msgbody)
+ #print("Response: {}".format(response))
+
 else:
- print "Success!"
+ print "No issues found!"
