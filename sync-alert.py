@@ -6,7 +6,6 @@ from datetime import datetime
 logpath = os.environ['LOGPATH']
 
 logname = "2017-04-12.log"
-#lookback = "2017-04-12 17:46:00"
 lookback = datetime(2017,04,12,17,47,00)
 
 pdate = re.compile('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})')
