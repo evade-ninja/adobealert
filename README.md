@@ -3,12 +3,12 @@ Generates an alert if the Adobe User Sync Tool returns an error. This is accompl
 
 ## Expects:
 - Environment Variables
-  -LOGPATH - full path to your Adobe User Sync logs
-  -ARN - the ARN for your SNS topic
-  -AWS\_ACCESSKEY\_ID - The AccessKey ID for the IAM user that will be publishing to your SNS topic
-  -AWS\_SECRET\_ACCESS\_KEY - If I told you it wouldn't be a secret anymore
-  -AWS\_DEFAULT\_REGION - The default AWS region (surprised?)
-  -LOOKBACK - How far back the script should look through the logs, in seconds. This should be the same as the interval between calls to the Adobe User Sync tool.
+  - LOGPATH - full path to your Adobe User Sync logs
+  - ARN - the ARN for your SNS topic
+  - AWS\_ACCESSKEY\_ID - The AccessKey ID for the IAM user that will be publishing to your SNS topic
+  - AWS\_SECRET\_ACCESS\_KEY - If I told you it wouldn't be a secret anymore
+  - AWS\_DEFAULT\_REGION - The default AWS region (surprised?)
+  - LOOKBACK - How far back the script should look through the logs, in seconds. This should be the same as the interval between calls to the Adobe User Sync tool.
 - Python Packages
   - boto3 (the AWS SDK/API for Python)
 - Configuration Changes
