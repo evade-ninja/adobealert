@@ -7,6 +7,7 @@ logpath = os.environ['LOGPATH']
 arn = os.environ['ARN']
 lookback = os.environ['LOOKBACK']
 
+
 #logname = "2017-04-12.log"
 #lookback = datetime(2017,04,12,17,47,00)
 
@@ -22,12 +23,12 @@ msgbody = ""
 
 with open(logpath + logname, 'r') as f:
  for line in f:
- #is this line from less than 5 minutes in the past?
+ #is this line from less than 5 minutes in the past? (and does this line start with a timestamp?)
   m = pdate.match(line)
   if m is not None:
    lt = datetime.strptime(m.group(), "%Y-%m-%d %H:%M:%S")
    tdelta = t_now - lt
-   if tdelta.seconds < lookback:
+   if tdelta.seconds < int(lookback):
     if perror.search(line): #me is not None:
      #this line contained "ERROR"
      msgbody = msgbody + line
@@ -36,10 +37,10 @@ with open(logpath + logname, 'r') as f:
     if ma is not None: # is not None:
      ma.group
      if int(ma.group(1)) > 0:
-      print "ma: " + ma.group(1)
       #this line contained the results, and there were errors
       msgbody = msgbody + line
 
+    #are there CRITICAL messages?
     if pcrit.search(line):
       msgbody = msgbody + line
 
@@ -48,10 +49,8 @@ if msgbody != '':
  msgbody = "Issues were detected with the Adobe Sync Tool. A summary is included below: \n\n" + msgbody
  import boto3
  client = boto3.client('sns')
- response = client.publish(
-  TopicArn=arn,
-  Subject="Adobe Sync Tool Alert",
-  Message=msgbody)
+ response = client.publish(TopicArn=arn,Subject="Adobe Sync Tool Alert",Message=msgbody)
+ print "Issues found-SNS sent"
  #print("Response: {}".format(response))
 
 else:
